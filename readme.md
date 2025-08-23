@@ -13,7 +13,7 @@ A Streamlit application for querying and analyzing ASX company announcements usi
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ASX-IQ/corpus-demo.git
    cd corpus-demo
    ```
 
