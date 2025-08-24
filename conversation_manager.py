@@ -22,7 +22,6 @@ class ConversationManager:
         self.aws_key = aws_key
         self.aws_region = aws_region
         self.ticker = None
-        self.user_email = None
         self.date_from = None
         self.date_to = None
         self.announcement_types = None

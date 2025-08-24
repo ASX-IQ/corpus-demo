@@ -97,7 +97,9 @@ AWS_KEY = st.secrets['aws']["secret_access_key"]
 AWS_REGION = st.secrets['aws']["region"]
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 AVATAR = 'AusIQ logo.jpg'
+first_message = 'Hello! How can AusIQ Company Corpus help you today?"'
 
+# Initialize session state variables
 if 'openai_client' not in st.session_state:
     st.session_state.openai_client = ClientOpenAI(OPENAI_API_KEY)
 client = st.session_state.openai_client
@@ -105,15 +107,6 @@ client = st.session_state.openai_client
 if 'conversation_manager' not in st.session_state:
     st.session_state.conversation_manager = ConversationManager(AWS_ID, AWS_KEY, AWS_REGION)
 conversation_manager = st.session_state.conversation_manager
-
-# Initialize session state variables
-if 'user_email' not in st.session_state:
-    st.session_state.user_email = 'dummy@dummy.com'
-
-
-conversation_manager.user_email = st.session_state.user_email
-
-first_message = 'Hello! How can AusIQ Company Corpus help you today?"'
 
 # Chats displayed in the chat window
 if "messages" not in st.session_state:
@@ -301,26 +294,6 @@ with col1:
     st.session_state.date_from = date_from
     st.session_state.date_to = date_to
     st.write(f'Date range (days): {st.session_state.date_range}')
-    # date_col1, date_col2, date_col3 = st.columns(3)
-    # with date_col1:
-    #     if st.button("90 Days"):
-    #         st.session_state.date_from = date_today - timedelta(days=90)
-    #         st.session_state.date_to = date_today
-    #         st.rerun()  # Trigger immediate update
-    #
-    # with date_col2:
-    #     if st.button("180 Days"):
-    #         st.session_state.date_from = date_180_days
-    #         st.session_state.date_to = date_today
-    #         st.rerun()
-    #
-    # with date_col3:
-    #     if st.button("1 Year"):
-    #         st.session_state.date_from = date_1_year
-    #         st.session_state.date_to = date_today
-    #         st.rerun()
-
-    # Update the date range (days)+
 
     # Add information for the user
     with st.expander('Query information', expanded=False):
@@ -350,13 +323,6 @@ with col1:
     conversation_manager.date_from = st.session_state.date_from
     conversation_manager.date_to = st.session_state.date_to
 
-    # Update user settings
-    # st.session_state.user_data['query']['selected_ticker'] = st.session_state.ticker
-    # st.session_state.user_data['query']['announcement_types'] = st.session_state.selected_reports
-    # st.session_state.user_data['query']['price_sensitive'] = conversation_manager.price_sensitive
-    # st.session_state.user_data['query']['date_from'] = st.session_state.date_from
-    # st.session_state.user_data['query']['date_to'] = st.session_state.date_to
-    # st.session_state.user_data['query']['date_range'] = st.session_state.date_range
 
 # Chat
 with col2:
@@ -406,13 +372,7 @@ with col2:
             # Grab the full message
             st.session_state.messages[-1]["content"] = full_response
 
-            # Add the full response to user data
-            # st.session_state.user_data['message']['assistant_response'] = full_response
-
             st.session_state.messages_history.append(full_response)
-
-            # Save to the db
-            # conversation_manager.save_user_data_to_db(st.session_state.user_data)
 
             # Add references if any exist
             if client.annotations:
@@ -447,12 +407,6 @@ with col2:
 
         # Change current prompt
         st.session_state.current_prompt = st.session_state.prompt
-
-        # Add to user data
-        # st.session_state.user_data['message']['message_text'] = st.session_state.prompt
-        # st.session_state.user_data['message']['message_timestamp'] = datetime.now()
-        # st.session_state.user_data['chat_settings']['chat_model'] = client.model
-        # st.session_state.user_data['chat_settings']['chat_mode'] = st.session_state.search_generate
 
         # Check if vector store needs updating
         needs_update, update_reason = needs_vs_update()
@@ -498,8 +452,6 @@ with col2:
 
                 # Update session state
                 st.session_state.types_counted = new_types_counted
-                # st.session_state.user_data['vector_store']['num_of_docs'] = len(st.session_state.loaded_documents)
-                # st.session_state.user_data['vector_store']['s3_keys'] = st.session_state.loaded_documents
                 st.session_state.kb_ready = True
 
                 # Save the current query hash to ticker cache
@@ -552,13 +504,8 @@ with col2:
             st.toast(icon='⚠️', body='Please select chat mode.')
             time.sleep(2)
 
-
-
         st.rerun()
 
 
     with st.expander('Chat summarized (Admin only)', expanded=False):
         st.write(client.summary_history)
-
-    # with st.expander('Debug (Admin only)', expanded=False):
-    #     st.write(st.session_state.user_data)
