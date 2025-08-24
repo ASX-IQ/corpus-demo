@@ -7,7 +7,6 @@ A Streamlit application for querying and analyzing ASX company announcements usi
 - Python 3.8+
 - OpenAI API key
 - AWS credentials (for S3 access)
-- MotherDuck token
 
 ## Setup
 
@@ -40,12 +39,6 @@ A Streamlit application for querying and analyzing ASX company announcements usi
    Create `.streamlit/secrets.toml` file with your credentials:
    ```toml
    OPENAI_API_KEY = "your-openai-api-key"
-   motherduck_token = "your-motherduck-token"
-
-   [aws]
-   access_key_id = "your-aws-access-key"
-   secret_access_key = "your-aws-secret-key"
-   region = "your-aws-region"
    ```
 
 6. **Run the Streamlit application**
@@ -61,11 +54,3 @@ A Streamlit application for querying and analyzing ASX company announcements usi
 - `few_shot_prompts.py` - Prompt templates for AI responses
 - `requirements.txt` - Python dependencies
 
-
-## Usage
-
-1. Select a company from the dropdown
-2. Configure announcement types and date range
-3. Choose between Generate or Search mode
-4. Ask questions about the company's announcements
-5. View responses with citations and source documents
