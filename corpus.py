@@ -96,7 +96,6 @@ AWS_ID = st.secrets['aws']["access_key_id"]
 AWS_KEY = st.secrets['aws']["secret_access_key"]
 AWS_REGION = st.secrets['aws']["region"]
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-MOTHERDUCKDB_TOKEN = st.secrets["motherduck_token"]
 AVATAR = 'AusIQ logo.jpg'
 
 if 'openai_client' not in st.session_state:
@@ -104,18 +103,13 @@ if 'openai_client' not in st.session_state:
 client = st.session_state.openai_client
 
 if 'conversation_manager' not in st.session_state:
-    st.session_state.conversation_manager = ConversationManager(MOTHERDUCKDB_TOKEN, AWS_ID, AWS_KEY, AWS_REGION)
+    st.session_state.conversation_manager = ConversationManager(AWS_ID, AWS_KEY, AWS_REGION)
 conversation_manager = st.session_state.conversation_manager
 
 # Initialize session state variables
 if 'user_email' not in st.session_state:
     st.session_state.user_email = 'dummy@dummy.com'
 
-# if 'user_id' not in st.session_state:
-#     st.session_state.user_id = conversation_manager.get_user_data(st.session_state.user_email)['user_id']
-
-# if 'user_name' not in st.session_state:
-#     st.session_state.user_name = conversation_manager.get_user_data(st.session_state.user_email)['user_name']
 
 conversation_manager.user_email = st.session_state.user_email
 
@@ -186,41 +180,6 @@ if 'ticker_loaded_documents' not in st.session_state:
 if 'ticker_query_hashes' not in st.session_state:
     st.session_state.ticker_query_hashes = {}
 
-# if 'user_data' not in st.session_state:
-#     st.session_state.user_data = {
-#         "session_id": str(uuid.uuid4()),
-#         'user': {
-#             'user_id': str(st.session_state.user_id),
-#             'user_email': st.session_state.user_email,
-#         },
-#         'vector_store': {
-#             'vs_id': None,
-#             'num_of_docs': 0,
-#             's3_keys': []
-#         },
-#         'query': {
-#             'selected_ticker': None,
-#             'announcement_types': None,
-#             'price_sensitive': None,
-#             'date_from': None,
-#             'date_to': None,
-#             'date_range': None,
-#         },
-#         'message': {
-#             'message_text': st.session_state.prompt,
-#             'message_timestamp': None,
-#             'assistant_response': None
-#         },
-#         'chat_settings': {
-#             'chat_model': None,
-#             'chat_mode': None,
-#             'tokens_used': 0,
-#         }
-#
-#     }
-
-# Get user tier
-# user_tier = get_user_tier(st.session_state.user_email)
 st.set_page_config(layout="wide")
 
 st.header('AusIQ Corpus', divider='red', width='content')
@@ -603,32 +562,3 @@ with col2:
 
     # with st.expander('Debug (Admin only)', expanded=False):
     #     st.write(st.session_state.user_data)
-
-# Right column - company summary
-with col3:
-    if st.session_state.ticker:
-        with st.spinner(text='Generating the summary...', show_time=True):
-            company_summary = conversation_manager.get_company_summary(st.session_state.ticker)
-            if company_summary:
-                st.markdown(f"#### {company_summary['company_name']}")
-                st.markdown(f'**ASX Ticker**: {company_summary['ticker']}')
-                st.write(f"**Industry**: {company_summary['industry']}")
-
-                st.divider()
-
-                st.markdown('**Price Performance**')
-                st.markdown(f"**Market Cap:** A\\${company_summary['market_cap']}M" if company_summary['market_cap'] else "**Market Cap:** N/A")
-                st.markdown(f"**Share Price:** A\\${company_summary['shares_price'] if company_summary['shares_price'] else 'N/A'}")
-                st.markdown(f"**90-Day Change:** {company_summary['price_diff_90d']:.2f}%" if company_summary['price_diff_90d'] else "**90-Day Change:** N/A")
-                st.markdown(f'**Price Range (52w):** A\\${company_summary['price_52W_Low']:.2f} - A\\${company_summary['price_52W_High']:.2f} ')
-                st.markdown(f"**Shares Issued:** {company_summary['shares_issued']}M" if company_summary['shares_issued'] else "**Shares Issued:** N/A")
-
-                st.divider()
-
-                st.markdown('**Contact Information**')
-
-                if company_summary['web_url']:
-                    st.markdown(f"**Website:** [{company_summary['web_url']}]({company_summary['web_url']})")
-
-                if company_summary['contact']:
-                    st.markdown(f"**Contact:** {company_summary['contact']}")
