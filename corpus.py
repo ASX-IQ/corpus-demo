@@ -92,9 +92,9 @@ def get_or_create_vector_store(ticker):
 
 
 # Load secrets
-AWS_ID = st.secrets['aws']["access_key_id"]
-AWS_KEY = st.secrets['aws']["secret_access_key"]
-AWS_REGION = st.secrets['aws']["region"]
+AWS_ID = st.secrets["access_key_id"]
+AWS_KEY = st.secrets["secret_access_key"]
+AWS_REGION = st.secrets["region"]
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 AVATAR = 'AusIQ logo.jpg'
 first_message = 'Hello! How can AusIQ Company Corpus help you today?"'

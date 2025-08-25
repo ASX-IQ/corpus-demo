@@ -39,6 +39,9 @@ A Streamlit application for querying and analyzing ASX company announcements usi
    Create `.streamlit/secrets.toml` file with your credentials:
    ```toml
    OPENAI_API_KEY = "your-openai-api-key"
+   access_key_id = "aws-key-id"
+   secret_access_key = "aws-access-key"
+   region = "aws-region"
    ```
 
 6. **Run the Streamlit application**
