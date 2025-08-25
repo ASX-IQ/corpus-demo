@@ -43,6 +43,7 @@ A Streamlit application for querying and analyzing ASX company announcements usi
    secret_access_key = "aws-access-key"
    region = "aws-region"
    ```
+   ping ab@ausiq.co for AWS keys
 
 6. **Run the Streamlit application**
    ```bash
