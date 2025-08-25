@@ -41,7 +41,7 @@ A Streamlit application for querying and analyzing ASX company announcements usi
    OPENAI_API_KEY = "your-openai-api-key"
    access_key_id = "aws-key-id"
    secret_access_key = "aws-access-key"
-   region = "aws-region"
+   region = "eu-north-1"
    ```
    ping ab@ausiq.co for AWS keys
 
