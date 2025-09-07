@@ -12,7 +12,7 @@ def create_query_hash(ticker, date_from, date_to, announcement_types, price_sens
     query_string = f"{ticker}_{date_from}_{date_to}_{sorted(announcement_types or [])}_{price_sensitive}"
     return hashlib.md5(query_string.encode()).hexdigest()[:8]
 
-def needs_vs_update():
+def needs_vs_update(conversation_manager):
     """Check if we need to create new vs and upload the documents"""
     if not st.session_state.ticker:
         return False, 'No ticker selected'
@@ -39,7 +39,7 @@ def needs_vs_update():
 
     return False, 'No changes'
 
-def get_new_docs():
+def get_new_docs(conversation_manager):
     """Compare the existing docs and decide if need to find the new ones"""
     if not st.session_state.ticker:
         return [], {}
@@ -84,11 +84,11 @@ def generate_prompts_buttons(input_disabled):
 
 @st.cache_data(ttl=1200, show_spinner='Fetching data...')
 def get_company_data():
-    return conversation_manager.get_companies_data()
+    return st.session_state.conversation_manager.get_companies_data()
 
 @st.cache_data(ttl=1200, show_spinner='Fetching data...')
 def get_or_create_vector_store(ticker):
-    return client.create_vs(ticker)
+    return st.session_state.openai_client.create_vs(ticker)
 
 
 # Load secrets
@@ -409,12 +409,12 @@ with col2:
         st.session_state.current_prompt = st.session_state.prompt
 
         # Check if vector store needs updating
-        needs_update, update_reason = needs_vs_update()
+        needs_update, update_reason = needs_vs_update(conversation_manager)
 
         # The query changed
         if needs_update:
             # Get incremental documents
-            incremental_pdfs, new_types_counted, all_pdfs = get_new_docs()
+            incremental_pdfs, new_types_counted, all_pdfs = get_new_docs(conversation_manager)
 
             if incremental_pdfs: # New query settings
                 spinner_text = f"Preparing {len(incremental_pdfs)} new documents ({update_reason})..."
