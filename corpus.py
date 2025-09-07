@@ -185,21 +185,17 @@ with col1:
 
     companies_dict = get_company_data()
 
-    # Create searchable options with ticker first for better search
-    company_options = [None] + [f"{value} - {key}" for key, value in companies_dict.items()]
-    
     selected_company = st.selectbox(
         label="Select the company",
         key="company_selectbox",
-        options=company_options,
-        help="Start typing ticker symbol or company name to search",
+        options=[None] + [f"{key} ({value})" for key, value in companies_dict.items()],
+        help="Select which company would you like to chat about",
         format_func=lambda x: "Select an option" if x is None else x
     )
 
     if selected_company:
-        # Parse format: "TICKER - Company Name"
-        ticker = selected_company.split(" - ")[0]
-        company_name = selected_company.split(" - ")[1]
+        company_name = selected_company.split(" (")[0]
+        ticker = companies_dict[company_name]
 
         # Add to conversation manager
         conversation_manager.ticker = ticker
